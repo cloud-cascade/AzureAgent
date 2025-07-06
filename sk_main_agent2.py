@@ -12,27 +12,6 @@ from semantic_kernel.agents import ChatCompletionAgent
 # Load environment variables from .env file
 load_dotenv()
 
-# async def check_mcp_dependencies():
-#     """Check if MCP dependencies are available"""
-#     try:
-#         # Check if npx is available
-#         result = subprocess.run(['npx', '--version'], capture_output=True, text=True, timeout=10)
-#         if result.returncode != 0:
-#             return False, "npx is not available. Please install Node.js and npm."
-        
-#         # Check if @azure/mcp package is accessible
-#         result = subprocess.run(['npx', '-y', '@azure/mcp@latest', '--version'], capture_output=True, text=True, timeout=30)
-#         if result.returncode != 0:
-#             return False, "Failed to access @azure/mcp package. Check your internet connection and npm registry access."
-        
-#         return True, "MCP dependencies are available"
-#     except subprocess.TimeoutExpired:
-#         return False, "Timeout checking MCP dependencies"
-#     except FileNotFoundError:
-#         return False, "npx not found. Please install Node.js and npm."
-#     except Exception as e:
-#         return False, f"Error checking MCP dependencies: {e}"
-
 async def main():
     
     # 1. Initialize Semantic Kernel with Azure OpenAI
@@ -48,52 +27,26 @@ async def main():
     )
     print("✅ Azure OpenAI service configured")
 
-    # 2. Check MCP dependencies first
-    # print("🔍 Checking MCP dependencies...")
-    # mcp_available, mcp_message = await check_mcp_dependencies()
-    
-    # if not mcp_available:
-    #     print(f"❌ {mcp_message}")
-    #     print("\n📋 To fix this issue:")
-    #     print("1. Install Node.js from https://nodejs.org/")
-    #     print("2. Restart your terminal/command prompt")
-    #     print("3. Run 'npm --version' to verify installation")
-    #     print("4. Try running this script again")
-        
-    #     # Continue without MCP - create a basic agent
-    #     print("\n🤖 Creating basic agent without MCP tools...")
-    #     agent = ChatCompletionAgent(
-    #         service=kernel.get_service("azure_openai"),
-    #         name="Azure_Assistant",
-    #         instructions="You are an Azure assistant. Since MCP tools are not available, you can provide general Azure guidance and information.",
-    #     )
-    #     print("✅ Basic Azure Assistant agent created")
-        
-    #     # Test the basic agent
-    #     print("\n🤖 Testing basic agent...")
-    #     test_message = "Hello! What can you help me with regarding Azure?"
-    #     print(f"📤 Sending message to basic agent: '{test_message}'")
-    #     try:
-    #         response = await agent.get_response(messages=test_message)
-    #         print(f"📥 Basic agent response received: {response}")
-    #     except Exception as e:
-    #         print(f"❌ Error during basic agent interaction: {e}")
-    #         print(f"Error type: {type(e).__name__}")
-    #         import traceback
-    #         print(f"Full traceback: {traceback.format_exc()}")
-        
-    #     return
-
-    # 3. Configure and start the Azure MCP server using MCPStdioPlugin
+    # 2. Configure and start the Azure MCP server using the working pattern
     print("🚀 Starting Azure MCP server...")
     
+    # Define parameters matching the working OpenAI framework
+    params = {"command": "npx", "args": ["-y", "@azure/mcp@latest", "server", "start"]}
+    
+    # Optional: Apply a tool filter if needed
+    # def rg_only(tool):
+    #     # Implement your filtering logic here
+    #     return "resource_group" in tool.name.lower()
+    # tool_filter = rg_only
+
     now = time.time()
     try:
         async with MCPStdioPlugin(
             name="Azure MCP",
             description="Azure Model Context Protocol server",
-            command="npx",
-            args=["-y", "@azure/mcp@latest", "server", "start"],
+            command=params["command"],
+            args=params["args"],
+            # tool_filter=tool_filter, # Uncomment and configure if filtering is needed
         ) as mcp_plugin:
             print(f"✅ Azure MCP server started in {time.time() - now:.2f} seconds")
 
