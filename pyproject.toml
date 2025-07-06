@@ -11,14 +11,23 @@ dependencies = [
     "azure-mgmt-datafactory>=9.2.0",
     "azure-mgmt-keyvault>=11.0.0",
     "azure-mgmt-resource>=24.0.0",
+    "dotenv>=0.9.9",
     "mcp>=1.10.1",
+    "npm>=0.1.1",
     "openai-agents>=0.1.0",
     "pydantic>=2.11.7",
     "pydantic-settings>=2.10.1",
+    "python-dotenv>=1.1.1",
     "pyyaml>=6.0.2",
     "requests>=2.32.4",
+    "semantic-kernel>=1.32.2",
 ]
 
 [tool.black]
 line-length = 88
 target-version = ['py312']
+
+[tool.uv.workspace]
+members = [
+    "semantic_kernel",
+]
