@@ -4,7 +4,7 @@ from agent_service import initialize_agent, get_agent_response, is_agent_initial
 
 def main():
     st.set_page_config(
-        page_title="CarMax DAP Copilot",
+        page_title="Azure DAP Copilot",
         page_icon="🚗",
         layout="wide",
         initial_sidebar_state="expanded"
